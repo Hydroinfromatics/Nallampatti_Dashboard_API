@@ -59,6 +59,8 @@ def get_sensor_data():
                 "data": []
             })
         
+        # Clean NaN values
+        data.fillna(value=None, inplace=True)  # or use another default value if needed
         json_data = data.to_json(orient='records', date_format='iso')  # Convert to JSON
         return jsonify({
             "status": "success",
