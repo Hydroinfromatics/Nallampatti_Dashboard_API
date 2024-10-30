@@ -3,6 +3,7 @@ from flask_cors import CORS  # Import CORS
 from datetime import datetime, timedelta
 from data_process import process_and_store_data, get_todays_data, get_historical_data
 import os
+import pandas as pd  # Ensure pandas is imported for DataFrame manipulation
 
 app = Flask(__name__)
 CORS(app)
@@ -61,7 +62,11 @@ def get_sensor_data():
             })
         
         # Clean NaN values
-        data.fillna(value=None, inplace=True)  # or use another default value if needed
+        if isinstance(data, pd.DataFrame):  # Check if data is a DataFrame
+            data.fillna(value=None, inplace=True)  # or use another default value if needed
+        else:
+            return jsonify({"status": "error", "message": "Data retrieval error."}), 500
+            
         json_data = data.to_json(orient='records', date_format='iso')  # Convert to JSON
         
         # Ensure json_data is a valid JSON object
@@ -106,7 +111,11 @@ def get_historical_data_range():
             })
 
         # Clean NaN values
-        data.fillna(value=None, inplace=True)
+        if isinstance(data, pd.DataFrame):  # Check if data is a DataFrame
+            data.fillna(value=None, inplace=True)
+        else:
+            return jsonify({"status": "error", "message": "Data retrieval error."}), 500
+            
         json_data = data.to_dict(orient='records')
         return jsonify({
             "status": "success",
@@ -143,7 +152,11 @@ def get_data_by_date(date):
             })
 
         # Clean NaN values
-        data.fillna(value=None, inplace=True)
+        if isinstance(data, pd.DataFrame):  # Check if data is a DataFrame
+            data.fillna(value=None, inplace=True)
+        else:
+            return jsonify({"status": "error", "message": "Data retrieval error."}), 500
+            
         json_data = data.to_dict(orient='records')
         return jsonify({
             "status": "success",
@@ -181,7 +194,11 @@ def get_data_range(range_type):
             })
 
         # Clean NaN values
-        data.fillna(value=None, inplace=True)
+        if isinstance(data, pd.DataFrame):  # Check if data is a DataFrame
+            data.fillna(value=None, inplace=True)
+        else:
+            return jsonify({"status": "error", "message": "Data retrieval error."}), 500
+            
         json_data = data.to_dict(orient='records')
         return jsonify({
             "status": "success",
