@@ -6,6 +6,7 @@ import os
 
 app = Flask(__name__)
 CORS(app)
+
 # Configuration
 API_URL = os.environ.get('API_URL', 'default_api_url')
 
@@ -62,10 +63,12 @@ def get_sensor_data():
         # Clean NaN values
         data.fillna(value=None, inplace=True)  # or use another default value if needed
         json_data = data.to_json(orient='records', date_format='iso')  # Convert to JSON
+        
+        # Ensure json_data is a valid JSON object
         return jsonify({
             "status": "success",
-            "count": len(json_data),
-            "data": json_data
+            "count": len(data),
+            "data": json.loads(json_data)  # Ensure it's a proper JSON object
         })
     except Exception as e:
         return jsonify({
@@ -102,6 +105,8 @@ def get_historical_data_range():
                 "data": []
             })
 
+        # Clean NaN values
+        data.fillna(value=None, inplace=True)
         json_data = data.to_dict(orient='records')
         return jsonify({
             "status": "success",
@@ -137,6 +142,8 @@ def get_data_by_date(date):
                 "data": []
             })
 
+        # Clean NaN values
+        data.fillna(value=None, inplace=True)
         json_data = data.to_dict(orient='records')
         return jsonify({
             "status": "success",
@@ -169,10 +176,12 @@ def get_data_range(range_type):
         if data.empty:
             return jsonify({
                 "status": "success",
-                "message": f"No data available for the specified range",
+                "message": "No data available for the specified range",
                 "data": []
             })
 
+        # Clean NaN values
+        data.fillna(value=None, inplace=True)
         json_data = data.to_dict(orient='records')
         return jsonify({
             "status": "success",
