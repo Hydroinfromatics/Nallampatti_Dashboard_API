@@ -59,7 +59,7 @@ def get_sensor_data():
                 "data": []
             })
         
-        json_data = data.to_dict(orient='records')
+        json_data = data.to_json(orient='records', date_format='iso')  # Convert to JSON
         return jsonify({
             "status": "success",
             "count": len(json_data),
