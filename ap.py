@@ -1,10 +1,11 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS  # Import CORS
 from datetime import datetime, timedelta
 from data_process import process_and_store_data, get_todays_data, get_historical_data
 import os
 
 app = Flask(__name__)
-
+CORS(app)
 # Configuration
 API_URL = os.environ.get('API_URL', 'default_api_url')
 
